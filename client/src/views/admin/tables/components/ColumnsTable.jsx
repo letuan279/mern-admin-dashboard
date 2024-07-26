@@ -1,6 +1,7 @@
 import React from "react";
 import CardMenu from "components/card/CardMenu";
 import Card from "components/card";
+import { MdCancel, MdCheckCircle } from "react-icons/md";
 
 import {
   createColumnHelper,
@@ -10,15 +11,23 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+const columnHelper = createColumnHelper();
+
 function ColumnsTable(props) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState([]);
-  let defaultData = tableData;
+  let defaultData = tableData.flatMap(task => task.subtasks.map(subtask => ({
+    ...subtask,
+    "hunting-task": task["hunting-task"],
+    desc: task.desc,
+    "task-date": task.date
+  })));
+
   const columns = [
-    columnHelper.accessor("name", {
-      id: "name",
+    columnHelper.accessor("subtask", {
+      id: "subtask",
       header: () => (
-        <p className="text-sm font-bold text-gray-600 dark:text-white">NAME</p>
+        <p className="text-sm font-bold text-gray-600 dark:text-white">SUBTASK</p>
       ),
       cell: (info) => (
         <p className="text-sm font-bold text-navy-700 dark:text-white">
@@ -26,17 +35,24 @@ function ColumnsTable(props) {
         </p>
       ),
     }),
-    columnHelper.accessor("progress", {
-      id: "progress",
+    columnHelper.accessor("status", {
+      id: "status",
       header: () => (
         <p className="text-sm font-bold text-gray-600 dark:text-white">
-          PROGRESS
+          STATUS
         </p>
       ),
       cell: (info) => (
-        <p className="text-sm font-bold text-navy-700 dark:text-white">
-          {info.getValue()}
-        </p>
+        <div className="flex items-center">
+          {info.getValue() === "Done" ? (
+            <MdCheckCircle className="text-green-500 me-1 dark:text-green-300" />
+          ) : info.getValue() === "In Progress" ? (
+            <MdCancel className="text-amber-500 me-1 dark:text-amber-300" />
+          ) : null}
+          <p className="text-sm font-bold text-navy-700 dark:text-white">
+            {info.getValue()}
+          </p>
+        </div>
       ),
     }),
     columnHelper.accessor("quantity", {
@@ -63,8 +79,10 @@ function ColumnsTable(props) {
         </p>
       ),
     }),
-  ]; // eslint-disable-next-line
+  ];
+
   const [data, setData] = React.useState(() => [...defaultData]);
+
   const table = useReactTable({
     data,
     columns,
@@ -76,73 +94,77 @@ function ColumnsTable(props) {
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
   });
+
   return (
     <Card extra={"w-full pb-10 p-4 h-full"}>
-      <header className="relative flex items-center justify-between">
-        <div className="text-xl font-bold text-navy-700 dark:text-white">
-          4-Columns Table
-        </div>
-        <CardMenu />
-      </header>
+      {tableData.map((task, index) => (
+        <div key={index}>
+          <header className="relative flex items-center justify-between">
+            <div className="text-xl font-bold text-navy-700 dark:text-white">
+              {task["hunting-task"]}
+            </div>
+            <div className="text-sm text-gray-500 dark:text-white">
+              {task.date}
+            </div>
+            <CardMenu />
+          </header>
+          <p className="text-sm text-gray-500 dark:text-white">{task.desc}</p>
 
-      <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
-        <table className="w-full">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="!border-px !border-gray-400">
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      onClick={header.column.getToggleSortingHandler()}
-                      className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
-                    >
-                      <div className="items-center justify-between text-xs text-gray-200">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {{
-                          asc: "",
-                          desc: "",
-                        }[header.column.getIsSorted()] ?? null}
-                      </div>
-                    </th>
-                  );
-                })}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {table
-              .getRowModel()
-              .rows.slice(0, 5)
-              .map((row) => {
-                return (
-                  <tr key={row.id}>
-                    {row.getVisibleCells().map((cell) => {
+          <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
+            <table className="w-full">
+              <thead>
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <tr key={headerGroup.id} className="!border-px !border-gray-400">
+                    {headerGroup.headers.map((header) => {
                       return (
-                        <td
-                          key={cell.id}
-                          className="min-w-[150px] border-white/0 py-3  pr-4"
+                        <th
+                          key={header.id}
+                          colSpan={header.colSpan}
+                          onClick={header.column.getToggleSortingHandler()}
+                          className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
                         >
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
-                        </td>
+                          <div className="items-center justify-between text-xs text-gray-200">
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {{
+                              asc: "",
+                              desc: "",
+                            }[header.column.getIsSorted()] ?? null}
+                          </div>
+                        </th>
                       );
                     })}
                   </tr>
-                );
-              })}
-          </tbody>
-        </table>
-      </div>
+                ))}
+              </thead>
+              <tbody>
+                {task.subtasks.map((subtask, rowIndex) => (
+                  <tr key={rowIndex}>
+                    {columns.map((column, colIndex) => (
+                      <td
+                        key={colIndex}
+                        className="min-w-[150px] border-white/0 py-3 pr-4"
+                      >
+                        {flexRender(
+                          column.cell,
+                          {
+                            ...subtask,
+                            getValue: () => subtask[column.id]
+                          }
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))}
     </Card>
   );
 }
 
 export default ColumnsTable;
-const columnHelper = createColumnHelper();

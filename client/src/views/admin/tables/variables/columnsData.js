@@ -38,12 +38,12 @@ export const columnsDataCheck = [
 
 export const columnsDataColumns = [
   {
-    Header: "NAME",
-    accessor: "name",
+    Header: "Subtask",
+    accessor: "subtask",
   },
   {
-    Header: "PROGRESS",
-    accessor: "progress",
+    Header: "Status",
+    accessor: "status",
   },
   {
     Header: "QUANTITY",
