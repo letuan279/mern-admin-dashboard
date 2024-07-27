@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { registerUser } from "services/api";
+import AuthContext from "contexts/AuthContext";
 
 import InputField from "components/fields/InputField";
 import { Link } from "react-router-dom";
 // import { FcGoogle } from "react-icons/fc";
 // import Checkbox from "components/checkbox";
+
+import { Button } from 'antd'
 
 export default function SignUp() {
 
@@ -12,26 +15,31 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  console.log(email, password, confirmPassword);
+  const [loading, setLoading] = useState(false);
+
+  const { authAction } = useContext(AuthContext);
 
   const handleSignUp = async (e) => {
-    e.preventDefault();
-    if (password !== confirmPassword) {
-      alert("Passwords do not match");
-      return;
+    setLoading(true);
+    try {
+      e.preventDefault();
+      if (password !== confirmPassword) {
+        alert("Passwords do not match");
+        return;
+      }
+      const userData = {
+        email,
+        password,
+      };
+      const res = await registerUser(userData);
+      if (res.success) {
+        authAction(res.data.token, res.data.user);
+      }
+      alert(res.message);
+    } catch (error) {
+      alert("Some error occured");
     }
-    const userData = {
-      email,
-      password,
-    };
-    const data = await registerUser(userData);
-    if (data.success) {
-      alert(data.message);
-      // Redirect to dashboard
-      console.log(data);
-    } else {
-      alert(data.message);
-    }
+    setLoading(false);
   }
 
   return (
@@ -74,7 +82,7 @@ export default function SignUp() {
           variant="auth"
           extra="mb-3"
           label="Password*"
-          placeholder="Min. 8 characters"
+          placeholder="Min. 4 characters"
           id="password"
           type="password"
           value={password}
@@ -86,7 +94,7 @@ export default function SignUp() {
           variant="auth"
           extra="mb-3"
           label="Confirm Password*"
-          placeholder="Min. 8 characters"
+          placeholder="Min. 4 characters"
           id="confirm-password"
           type="password"
           value={confirmPassword}
@@ -107,12 +115,14 @@ export default function SignUp() {
             Forgot Password?
           </a>
         </div> */}
-        <button 
+        <Button 
           className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
           onClick={handleSignUp}
+          loading={loading}
+          type="primary"
         >
           Sign Up
-        </button>
+        </Button>
         <div className="mt-4">
           <span className=" text-sm font-medium text-navy-700 dark:text-gray-600">
             Nah?
