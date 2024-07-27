@@ -80,7 +80,17 @@ const loginUser = async (req, res) => {
     }
 };
 
+const checkUser = async (req, res) => {
+    // Check req.user
+    res.json({
+        success: true,
+        message: 'User is logged in',
+        data: req.user
+    });
+}
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    checkUser
 };

@@ -1,30 +1,39 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { loginUser } from "services/api";
-import { saveToken } from "services/auth";
+import AuthContext from "contexts/AuthContext";
 
 import InputField from "components/fields/InputField";
 import { Link } from "react-router-dom";
 // import { FcGoogle } from "react-icons/fc";
 // import Checkbox from "components/checkbox";
 
+import { Button } from 'antd'
+
 export default function SignIn() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { authAction } = useContext(AuthContext);
 
   const handleSignIn = async (e) => {
-    e.preventDefault();
-    const userData = {
-      email,
-      password,
-    };
-    const data = await loginUser(userData);
-    if (data.success) {
-      saveToken(data.token);
-      // ...
-    } else {
-      alert(data.message);
+    setLoading(true);
+    try {
+      e.preventDefault();
+      const userData = {
+        email,
+        password,
+      };
+      const res = await loginUser(userData);
+      if (res.success) {
+        authAction(res.data.token, res.data.user);
+      }
+      alert(res.message);
+    } catch (error) {
+      alert("Some error occured");
     }
+    setLoading(false);
   }
 
   return (
@@ -67,7 +76,7 @@ export default function SignIn() {
           variant="auth"
           extra="mb-3"
           label="Password*"
-          placeholder="Min. 8 characters"
+          placeholder="Min. 4 characters"
           id="password"
           type="password"
           value={password}
@@ -88,12 +97,14 @@ export default function SignIn() {
             Forgot Password?
           </a>
         </div> */}
-        <button 
+        <Button 
           className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
           onClick={handleSignIn}
+          loading={loading}
+          type="primary"
         >
           Sign In
-        </button>
+        </Button>
         <div className="mt-4">
           <span className=" text-sm font-medium text-navy-700 dark:text-gray-600">
             Not registered yet?

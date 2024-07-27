@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { Navigate } from 'react-router-dom';
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
@@ -18,6 +19,10 @@ import {
   MdPerson,
   MdLock,
 } from "react-icons/md";
+
+// Context
+import AuthContext from "contexts/AuthContext";
+import { path } from "variables/path";
 
 const routes = [
   {
@@ -72,3 +77,14 @@ const routes = [
 ];
 
 export default routes;
+
+// Private Route
+export const PrivateRoute = ({ children }) => {
+  const user = useContext(AuthContext);
+
+  if (user === null) {
+    return <Navigate to={path.signIn} />;
+  }
+
+  return children;
+};
