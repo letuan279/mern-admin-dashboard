@@ -1,0 +1,27 @@
+/* CustomSidebar.css */
+.ps-sidebar-container {
+    background-color: white;
+    color: black;
+  }
+  
+  .ps-menuitem-root {
+    padding: 10px;
+  }
+  
+  .ps-menuitem-root.active {
+    background-color: #13395e;
+    color: #b6c8d9;
+  }
+  
+  .ps-menuitem-root:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .ps-menu-root {
+    padding-top: 20px;
+  }
+  
+  .ps-sidebar-container .ps-menuitem-root {
+    border-bottom: 1px solid #e0e0e0;
+  }
+  

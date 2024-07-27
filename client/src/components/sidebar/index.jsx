@@ -32,6 +32,8 @@ const Sidebar = ({ open, onClose }) => {
         <Links routes={routes} />
       </ul>
 
+      
+
       {/* Free Horizon Card */}
       {/* <div className="flex justify-center">
         <SidebarCard />

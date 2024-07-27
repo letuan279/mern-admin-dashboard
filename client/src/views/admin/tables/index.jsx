@@ -28,10 +28,9 @@ const Tables = () => {
       {/* <div className="mt-5 grid h-full grid-cols-2 gap-5 md:grid-cols-1"> */}
       <div className="mt-5 grid h-full gap-5 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-1 p-5">
 
-        <ColumnsTable
-          columnsData={columnsDataColumns}
-          tableData={tableDataColumns}
-        />
+      {tableDataColumns.map((task, index) => (
+        <ColumnsTable key={index} tableData={[task]} />
+      ))}
 
         {/* <ComplexTable
           columnsData={columnsDataComplex}

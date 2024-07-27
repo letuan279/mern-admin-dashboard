@@ -16,6 +16,7 @@ const columnHelper = createColumnHelper();
 function ColumnsTable(props) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState([]);
+  
   let defaultData = tableData.flatMap(task => task.subtasks.map(subtask => ({
     ...subtask,
     "hunting-task": task["hunting-task"],
@@ -109,60 +110,57 @@ function ColumnsTable(props) {
             <CardMenu />
           </header>
           <p className="text-sm text-gray-500 dark:text-white">{task.desc}</p>
-
-          <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
-            <table className="w-full">
-              <thead>
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <tr key={headerGroup.id} className="!border-px !border-gray-400">
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <th
-                          key={header.id}
-                          colSpan={header.colSpan}
-                          onClick={header.column.getToggleSortingHandler()}
-                          className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
-                        >
-                          <div className="items-center justify-between text-xs text-gray-200">
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                            {{
-                              asc: "",
-                              desc: "",
-                            }[header.column.getIsSorted()] ?? null}
-                          </div>
-                        </th>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </thead>
-              <tbody>
-                {task.subtasks.map((subtask, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {columns.map((column, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className="min-w-[150px] border-white/0 py-3 pr-4"
-                      >
-                        {flexRender(
-                          column.cell,
-                          {
-                            ...subtask,
-                            getValue: () => subtask[column.id]
-                          }
-                        )}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
         </div>
       ))}
+
+      <div className="mt-8 overflow-x-scroll xl:overflow-x-hidden">
+        <table className="w-full">
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id} className="!border-px !border-gray-400">
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <th
+                      key={header.id}
+                      colSpan={header.colSpan}
+                      onClick={header.column.getToggleSortingHandler()}
+                      className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
+                    >
+                      <div className="flex items-center justify-between text-xs text-gray-200">
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                        {{
+                          asc: " ▲",
+                          desc: " ▼",
+                        }[header.column.getIsSorted()] ?? null}
+                      </div>
+                    </th>
+                  );
+                })}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className="min-w-[150px] border-white/0 py-3 pr-4"
+                  >
+                    {flexRender(
+                      cell.column.columnDef.cell,
+                      cell.getContext()
+                    )}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </Card>
   );
 }
