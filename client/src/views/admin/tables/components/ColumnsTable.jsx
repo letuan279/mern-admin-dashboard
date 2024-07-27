@@ -1,22 +1,17 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { MdCancel, MdCheckCircle, MdRemoveRedEye } from "react-icons/md";
+import { createColumnHelper, flexRender, getCoreRowModel, getSortedRowModel, useReactTable } from "@tanstack/react-table";
 import CardMenu from "components/card/CardMenu";
 import Card from "components/card";
-import { MdCancel, MdCheckCircle } from "react-icons/md";
-
-import {
-  createColumnHelper,
-  flexRender,
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
 
 const columnHelper = createColumnHelper();
 
 function ColumnsTable(props) {
   const { tableData } = props;
   const [sorting, setSorting] = React.useState([]);
-  
+  const navigate = useNavigate();
+
   let defaultData = tableData.flatMap(task => task.subtasks.map(subtask => ({
     ...subtask,
     "hunting-task": task["hunting-task"],
@@ -39,9 +34,7 @@ function ColumnsTable(props) {
     columnHelper.accessor("status", {
       id: "status",
       header: () => (
-        <p className="text-sm font-bold text-gray-600 dark:text-white">
-          STATUS
-        </p>
+        <p className="text-sm font-bold text-gray-600 dark:text-white">STATUS</p>
       ),
       cell: (info) => (
         <div className="flex items-center">
@@ -59,9 +52,7 @@ function ColumnsTable(props) {
     columnHelper.accessor("quantity", {
       id: "quantity",
       header: () => (
-        <p className="text-sm font-bold text-gray-600 dark:text-white">
-          QUANTITY
-        </p>
+        <p className="text-sm font-bold text-gray-600 dark:text-white">QUANTITY</p>
       ),
       cell: (info) => (
         <p className="text-sm font-bold text-navy-700 dark:text-white">
@@ -78,6 +69,22 @@ function ColumnsTable(props) {
         <p className="text-sm font-bold text-navy-700 dark:text-white">
           {info.getValue()}
         </p>
+      ),
+    }),
+    // New column for the button
+    columnHelper.accessor("view", {
+      id: "view",
+      cell: (info) => (
+        <button
+          onClick={() => {
+            const subtaskId = info.row.original.id; // Assuming each subtask has a unique ID
+            const taskId = info.row.original.taskId; // Assuming you have taskId
+            navigate(`/admin/cases-${taskId}/subtask-${subtaskId}/views`);
+          }}
+          className="text-gray-600 dark:text-white hover:text-gray-800 dark:hover:text-gray-300 focus:outline-none"
+        >
+          <MdRemoveRedEye className="text-xl transform scale-150 hover:scale-175 transition-transform duration-300" />
+        </button>
       ),
     }),
   ];
@@ -119,25 +126,28 @@ function ColumnsTable(props) {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id} className="!border-px !border-gray-400">
                 {headerGroup.headers.map((header) => {
-                  return (
-                    <th
-                      key={header.id}
-                      colSpan={header.colSpan}
-                      onClick={header.column.getToggleSortingHandler()}
-                      className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
-                    >
-                      <div className="flex items-center justify-between text-xs text-gray-200">
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                        {{
-                          asc: " ▲",
-                          desc: " ▼",
-                        }[header.column.getIsSorted()] ?? null}
-                      </div>
-                    </th>
-                  );
+                  if (header.id !== 'view') { // Skip rendering header for 'view' column
+                    return (
+                      <th
+                        key={header.id}
+                        colSpan={header.colSpan}
+                        onClick={header.column.getToggleSortingHandler()}
+                        className="cursor-pointer border-b-[1px] border-gray-200 pt-4 pb-2 pr-4 text-start"
+                      >
+                        <div className="flex items-center justify-between text-xs text-gray-200">
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                          {{
+                            asc: " ▲",
+                            desc: " ▼",
+                          }[header.column.getIsSorted()] ?? null}
+                        </div>
+                      </th>
+                    );
+                  }
+                  return null;
                 })}
               </tr>
             ))}
