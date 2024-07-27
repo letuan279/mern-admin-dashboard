@@ -61,15 +61,15 @@ export default function Admin(props) {
     <div className="flex h-full w-full">
       <Sidebar open={open} onClose={() => setOpen(false)} />
       {/* Navbar & Main Content */}
-      <div className="h-full w-full bg-lightPrimary dark:!bg-navy-900">
+      <div className={`h-full w-full bg-lightPrimary dark:!bg-navy-900 ${open ? 'ml-0' : '-ml-[313px]'} transition-all duration-300`}>
         {/* Main Content */}
         <main
-          className={`mx-[12px] h-full flex-none transition-all md:pr-2 xl:ml-[313px]`}
+          className={`mx-[12px] h-full flex-none transition-all md:pr-2 ${open ? 'xl:ml-[313px]' : 'xl:ml-0'}`}
         >
           {/* Routes */}
           <div className="h-full">
             <Navbar
-              onOpenSidenav={() => setOpen(true)}
+              onOpenSidenav={() => setOpen(!open)}
               logoText={"Horizon UI Tailwind React"}
               brandText={currentRoute}
               secondary={getActiveNavbar(routes)}

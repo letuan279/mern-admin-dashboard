@@ -2,7 +2,7 @@ import React from "react";
 import CardMenu from "components/card/CardMenu";
 import Card from "components/card";
 import Progress from "components/progress";
-import { MdCancel, MdCheckCircle, MdOutlineError } from "react-icons/md";
+import { MdCancel, MdCheckCircle } from "react-icons/md";
 
 import {
   createColumnHelper,
@@ -14,16 +14,27 @@ import {
 
 const columnHelper = createColumnHelper();
 
-// const columns = columnsDataCheck;
 export default function ComplexTable(props) {
-  const { tableData } = props;
+  const { tableData, tableName } = props;
   const [sorting, setSorting] = React.useState([]);
   let defaultData = tableData;
+
   const columns = [
-    columnHelper.accessor("name", {
-      id: "name",
+    columnHelper.accessor("task", {
+      id: "task",
       header: () => (
-        <p className="text-sm font-bold text-gray-600 dark:text-white">NAME</p>
+        <p className="text-sm font-bold text-gray-600 dark:text-white">TASK</p>
+      ),
+      cell: (info) => (
+        <p className="text-sm font-bold text-navy-700 dark:text-white">
+          {info.getValue()}
+        </p>
+      ),
+    }),
+    columnHelper.accessor("date", {
+      id: "date",
+      header: () => (
+        <p className="text-sm font-bold text-gray-600 dark:text-white">DATE</p>
       ),
       cell: (info) => (
         <p className="text-sm font-bold text-navy-700 dark:text-white">
@@ -40,40 +51,14 @@ export default function ComplexTable(props) {
       ),
       cell: (info) => (
         <div className="flex items-center">
-          {info.getValue() === "Approved" ? (
+          {info.getValue() === "Done" ? (
             <MdCheckCircle className="text-green-500 me-1 dark:text-green-300" />
-          ) : info.getValue() === "Disable" ? (
-            <MdCancel className="text-red-500 me-1 dark:text-red-300" />
-          ) : info.getValue() === "Error" ? (
-            <MdOutlineError className="text-amber-500 me-1 dark:text-amber-300" />
+          ) : info.getValue() === "In Progress" ? (
+            <MdCancel className="text-amber-500 me-1 dark:text-amber-300" />
           ) : null}
           <p className="text-sm font-bold text-navy-700 dark:text-white">
             {info.getValue()}
           </p>
-        </div>
-      ),
-    }),
-    columnHelper.accessor("date", {
-      id: "date",
-      header: () => (
-        <p className="text-sm font-bold text-gray-600 dark:text-white">DATE</p>
-      ),
-      cell: (info) => (
-        <p className="text-sm font-bold text-navy-700 dark:text-white">
-          {info.getValue()}
-        </p>
-      ),
-    }),
-    columnHelper.accessor("progress", {
-      id: "progress",
-      header: () => (
-        <p className="text-sm font-bold text-gray-600 dark:text-white">
-          PROGRESS
-        </p>
-      ),
-      cell: (info) => (
-        <div className="flex items-center">
-          <Progress width="w-[108px]" value={info.getValue()} />
         </div>
       ),
     }),
@@ -90,11 +75,12 @@ export default function ComplexTable(props) {
     getSortedRowModel: getSortedRowModel(),
     debugTable: true,
   });
+
   return (
     <Card extra={"w-full h-full px-6 pb-6 sm:overflow-x-auto"}>
       <div className="relative flex items-center justify-between pt-4">
         <div className="text-xl font-bold text-navy-700 dark:text-white">
-          Complex Table
+          {tableName}
         </div>
         <CardMenu />
       </div>
