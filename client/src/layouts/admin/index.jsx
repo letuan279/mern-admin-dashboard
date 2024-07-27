@@ -61,10 +61,10 @@ export default function Admin(props) {
     <div className="flex h-full w-full">
       <Sidebar open={open} onClose={() => setOpen(false)} />
       {/* Navbar & Main Content */}
-      <div className={`h-full w-full bg-lightPrimary dark:!bg-navy-900 ${open ? 'ml-0' : '-ml-[313px]'} transition-all duration-300`}>
+      <div className={`flex-1 h-full bg-lightPrimary dark:!bg-navy-900 transition-all duration-300`}>
         {/* Main Content */}
         <main
-          className={`mx-[12px] h-full flex-none transition-all md:pr-2 ${open ? 'xl:ml-[313px]' : 'xl:ml-0'}`}
+          className={`mx-[12px] h-full flex-none transition-all md:pr-2`}
         >
           {/* Routes */}
           <div className="h-full">
