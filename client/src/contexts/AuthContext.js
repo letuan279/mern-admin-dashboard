@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
                 }
             } else {
                 setUser(null);
-                navigate(path.signIn);
+                setToken(null);
             }
             setLoading(false);
         };
