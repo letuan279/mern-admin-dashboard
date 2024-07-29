@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/userRoutes');
+const taskRoutes = require('./routes/taskRoutes');
 const cors = require('cors');
 
 dotenv.config();
@@ -17,6 +18,7 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
 });
 
 app.use('/api/users', userRoutes);
+app.use('/api/tasks', taskRoutes);
 
 const PORT = process.env.PORT || 5050;
 app.listen(PORT, () => {

@@ -11,6 +11,8 @@ export default function Admin(props) {
   const [open, setOpen] = React.useState(true);
   const [currentRoute, setCurrentRoute] = React.useState("Main Dashboard");
 
+  console.log("currentRoute", currentRoute);  
+
   React.useEffect(() => {
     window.addEventListener("resize", () =>
       window.innerWidth < 1200 ? setOpen(false) : setOpen(true)

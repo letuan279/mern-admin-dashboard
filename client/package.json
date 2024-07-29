@@ -19,6 +19,7 @@
     "apexcharts": "3.35.5",
     "axios": "^1.7.2",
     "framer-motion": "^7.10.2",
+    "moment": "^2.30.1",
     "react": "^18.2.0",
     "react-apexcharts": "1.4.0",
     "react-calendar": "^3.9.0",
