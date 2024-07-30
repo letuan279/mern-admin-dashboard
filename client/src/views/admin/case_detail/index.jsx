@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useLayoutEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { useContext } from 'react'
 import TaskContext from 'contexts/TaskContext'
@@ -7,9 +7,7 @@ const CaseDetail = () => {
     const { id } = useParams()
     const { currentCase, getCase } = useContext(TaskContext);
 
-    console.log(currentCase);
-
-    useEffect(() => {
+    useLayoutEffect(() => {
         getCase(id)
     }
     , [id])
