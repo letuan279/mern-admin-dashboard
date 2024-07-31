@@ -14,7 +14,17 @@ import DevelopmentTable from "./components/DevelopmentTable";
 import ColumnsTable from "./components/ColumnsTable";
 import ComplexTable from "./components/ComplexTable";
 
+import { useContext, useEffect } from "react";
+import TaskContext from "contexts/TaskContext";
+
 const Tables = () => {
+
+  const { tasks, getAllTasks } = useContext(TaskContext);
+
+  useEffect(() => {
+    getAllTasks();
+  }, []);
+
   return (
     <div>
       {/* <div className="mt-5 grid h-full grid-cols-1 gap-5 md:grid-cols-2">
@@ -28,7 +38,7 @@ const Tables = () => {
       {/* <div className="mt-5 grid h-full grid-cols-2 gap-5 md:grid-cols-1"> */}
       <div className="mt-5 grid h-full gap-5 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-1 p-5">
 
-      {tableDataColumns.map((task, index) => (
+      {tasks.map((task, index) => (
         <ColumnsTable key={index} tableData={[task]} />
       ))}
 

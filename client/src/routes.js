@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom';
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
-import NFTMarketplace from "views/admin/marketplace";
 import Profile from "views/admin/profile";
 import DataTables from "views/admin/tables";
 
@@ -14,7 +13,6 @@ import SignUp from "views/auth/SignUp";
 // Icon Imports
 import {
   MdHome,
-  MdOutlineShoppingCart,
   MdBarChart,
   MdPerson,
   MdLock,
@@ -23,6 +21,7 @@ import {
 // Context
 import AuthContext from "contexts/AuthContext";
 import { path } from "variables/path";
+import CaseDetail from "views/admin/case_detail";
 
 const routes = [
   {
@@ -31,24 +30,23 @@ const routes = [
     path: "default",
     icon: <MdHome className="h-6 w-6" />,
     component: <MainDashboard />,
-    isPrivate: true,
+    layer: 1,
   },
-  // {
-  //   name: "NFT Marketplace",
-  //   layout: "/admin",
-  //   path: "nft-marketplace",
-  //   icon: <MdOutlineShoppingCart className="h-6 w-6" />,
-  //   component: <NFTMarketplace />,
-  //   secondary: true,
-  //   isPrivate: true,
-  // },
+  {
+    name: "Cases Detail",
+    layout: "/admin",
+    icon: <MdBarChart className="h-6 w-6" />,
+    path: "cases/cases-:id/details",
+    component: <CaseDetail />,
+    layer: 2,
+  },
   {
     name: "Cases",
     layout: "/admin",
     icon: <MdBarChart className="h-6 w-6" />,
     path: "cases",
     component: <DataTables />,
-    isPrivate: true,
+    layer: 1,
   },
   {
     name: "Profile",
@@ -56,7 +54,7 @@ const routes = [
     path: "profile",
     icon: <MdPerson className="h-6 w-6" />,
     component: <Profile />,
-    isPrivate: true,
+    layer: 1,
   },
   {
     name: "Sign In",
@@ -64,7 +62,7 @@ const routes = [
     path: "sign-in",
     icon: <MdLock className="h-6 w-6" />,
     component: <SignIn />,
-    isPrivate: false,
+    layer: 1,
   },
   {
     name: "Sign Up",
@@ -72,7 +70,7 @@ const routes = [
     path: "sign-up",
     icon: <MdLock className="h-6 w-6" />,
     component: <SignUp />,
-    isPrivate: false,
+    layer: 1,
   },
 ];
 
@@ -80,7 +78,7 @@ export default routes;
 
 // Private Route
 export const PrivateRoute = ({ children }) => {
-  const user = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   if (user === null) {
     return <Navigate to={path.signIn} />;

@@ -2,6 +2,9 @@ import React from "react";
 import CardMenu from "components/card/CardMenu";
 import Card from "components/card";
 import { MdCancel, MdCheckCircle } from "react-icons/md";
+import { Link } from "react-router-dom";
+
+import moment from "moment";
 
 import {
   createColumnHelper,
@@ -76,7 +79,7 @@ function ColumnsTable(props) {
       ),
       cell: (info) => (
         <p className="text-sm font-bold text-navy-700 dark:text-white">
-          {info.getValue()}
+          {moment(info.getValue()).format("MMM DD, YYYY")}
         </p>
       ),
     }),
@@ -102,10 +105,15 @@ function ColumnsTable(props) {
         <div key={index}>
           <header className="relative flex items-center justify-between">
             <div className="text-xl font-bold text-navy-700 dark:text-white">
-              {task["hunting-task"]}
+              <Link 
+                to={`cases-${task._id}/details`}
+                className="hover:underline"
+              >
+                {task["hunting-task"]}
+              </Link>
             </div>
             <div className="text-sm text-gray-500 dark:text-white">
-              {task.date}
+              {moment(task.date).format("MMM DD, YYYY")}
             </div>
             <CardMenu />
           </header>
