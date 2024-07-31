@@ -3,7 +3,7 @@ import CardMenu from "components/card/CardMenu";
 import Card from "components/card";
 import Progress from "components/progress";
 import { MdRemoveRedEye } from "react-icons/md";
-import SubtaskDetails from "./SubtaskDetail"
+import SubtaskDetail from "./SubtaskDetail"
 import {
   createColumnHelper,
   flexRender,
@@ -11,6 +11,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const columnHelper = createColumnHelper();
 
@@ -19,7 +20,7 @@ export default function SubtaskTableView(props) {
   const [sorting, setSorting] = React.useState([]);
   const [subtaskDetailVisible, setSubtaskDetailVisible] = React.useState(false);
   const [selectedSubtask, setSelectedSubtask] = React.useState(null);
-
+  const navigate = useNavigate()
   const columns = [
     columnHelper.accessor("subtask", {
       id: "subtask",
@@ -55,7 +56,7 @@ export default function SubtaskTableView(props) {
             value={90}
             color={info.getValue() === 100 ? 'bg-blue-500' : 'bg-red-500'}
           />
-          <button
+          {/* <button
             className="ml-2 text-navy-700 dark:text-white"
             onClick={() => {
               setSelectedSubtask(info.row.original);
@@ -63,7 +64,7 @@ export default function SubtaskTableView(props) {
             }}
           >
             <MdRemoveRedEye />
-          </button>
+          </button> */}
         </div>
       ),
     }),
@@ -74,17 +75,26 @@ export default function SubtaskTableView(props) {
         // <button type="submit" className="px-4 py-2 text-white bg-blue-600 rounded-md">
         //                     Add Subtask
         //                 </button>
+        // <button
+        //   onClick={() => {
+        //     const subtaskId = info.row.original.id; // Assuming each subtask has a unique ID
+        //     const taskId = info.row.original.taskId; // Assuming you have taskId
+        //     navigate(`/admin/cases-${taskId}/subtask-${subtaskId}/views`);
+        //   }}
+        //   className="px-4 py-2 text-white bg-blue-600 rounded-md"
+        //   type="submit"
+        // >
+        //   <MdRemoveRedEye className="text-xl transform scale-150 hover:scale-175 transition-transform duration-300" />
+        // </button>
         <button
-          onClick={() => {
-            const subtaskId = info.row.original.id; // Assuming each subtask has a unique ID
-            const taskId = info.row.original.taskId; // Assuming you have taskId
-            navigate(`/admin/cases-${taskId}/subtask-${subtaskId}/views`);
-          }}
-          className="px-4 py-2 text-white bg-blue-600 rounded-md"
-          type="submit"
-        >
-          <MdRemoveRedEye className="text-xl transform scale-150 hover:scale-175 transition-transform duration-300" />
-        </button>
+            className="ml-2 text-navy-700 dark:text-white"
+            onClick={() => {
+              setSelectedSubtask(info.row.original);
+              setSubtaskDetailVisible(true);
+            }}
+          >
+            <MdRemoveRedEye />
+          </button>
       ),
     }),
   ];
@@ -165,7 +175,7 @@ export default function SubtaskTableView(props) {
       </div>
 
       {subtaskDetailVisible && selectedSubtask && (
-        <SubtaskDetails subtask={selectedSubtask} onClose={() => setSubtaskDetailVisible(false)} />
+        <SubtaskDetail subtask={selectedSubtask} onClose={() => setSubtaskDetailVisible(false)} />
       )}
     </Card>
   );

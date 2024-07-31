@@ -4,6 +4,7 @@ import { useContext } from 'react';
 import TaskContext from 'contexts/TaskContext';
 import PieChartCard from "views/admin/default/components/PieChartCard";
 import AddSubtaskModal from './AddSubtaskModal';  // Adjust the import path accordingly
+import SubtaskTableView from './SubtaskTableView';
 
 const CaseDetail = () => {
     const { id } = useParams();
@@ -41,7 +42,7 @@ const CaseDetail = () => {
                     <h1 className="text-3xl font-bold mb-4">{huntingTask}</h1>
                     <p className="text-gray-700 mb-2">{desc}</p>
                     <p className="text-gray-500 mb-2">Date: {formattedDate}</p>
-                    <p className="text-gray-500 mb-2">Number of Subtasks: {subtasks.length}</p>
+                    {/* <p className="text-gray-500 mb-2">Number of Subtasks: {subtasks.length}</p>
                     {subtasks.length > 0 ? (
                         <ul className="list-disc ml-5 mt-2">
                             {subtasks.map((subtask, index) => (
@@ -52,13 +53,15 @@ const CaseDetail = () => {
                         </ul>
                     ) : (
                         <p className="text-gray-500 mt-2">No subtasks available.</p>
-                    )}
+                    )} */}
                     <button
                         onClick={() => setIsModalOpen(true)}
                         className="mt-4 px-4 py-2 text-white bg-blue-600 rounded-md"
                     >
                         Add Subtask
                     </button>
+                    <SubtaskTableView ></SubtaskTableView>
+                  
                 </div>
                 <div>
                     <PieChartCard data={pieData} />
